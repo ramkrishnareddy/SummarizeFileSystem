@@ -4,28 +4,31 @@ import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GetFiles {
 
-	public ArrayList<String> GetFilesFromPath(File[] lstOfFiles){
+	public List<FolderSys> GetFilesFromPath(File[] lstOfFiles){
 		String fileText="";
 	//	File folder=new File(path);
 		ArrayList<String> lstOfAllFiles=new ArrayList<String>();
-		
+		List<FolderSys> liFolderSys =new ArrayList<FolderSys>();
 		for (int i = 0; i < lstOfFiles.length; i++) {
 		      if (lstOfFiles[i].isFile()) {
 		    	  
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
-		    	  lstOfAllFiles.add(fileText);
+		    	 // lstOfAllFiles.add(fileText);
+		    	  liFolderSys.add(new FolderSys(fileText, R.drawable.ic_launcher));
 		        System.out.println("File " + lstOfFiles[i].getName());
 		      } else if (lstOfFiles[i].isDirectory()) {
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
-		    	  lstOfAllFiles.add(fileText);
-		    	 lstOfAllFiles= GetSubFiles(lstOfFiles[i],lstOfAllFiles);
+		    	  //lstOfAllFiles.add(fileText);
+		    	  liFolderSys.add(new FolderSys(fileText, R.drawable.ic_launcher));
+		    	// lstOfAllFiles= GetSubFiles(lstOfFiles[i],lstOfAllFiles);
 		        System.out.println("Directory " + lstOfFiles[i].getName());
 		      }
 		    }
-		return lstOfAllFiles;
+		return liFolderSys;
 		
 	}
 public ArrayList<String> GetSubFiles(File subFile,ArrayList<String> lstOfFileExist){

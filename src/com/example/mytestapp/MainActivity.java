@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -35,24 +36,26 @@ public class MainActivity extends ActionBarActivity {
         	list.add(days[i]);
         }
         
-        for (int i = 0; i < days.length; ++i) {
+       /* for (int i = 0; i < days.length; ++i) {
         	liFolderSys.add(new FolderSys(days[i], R.drawable.ic_launcher));
-        }
+        }*/
         
         
         GetFiles objGetFiles=new GetFiles();
         File[] lstOfFiles=Environment.getExternalStorageDirectory().listFiles();
-        list=objGetFiles.GetFilesFromPath(lstOfFiles);
+        liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles);
         
-       // ArrayAdapter<FolderSys> adapter = new MyFolderSysArrayAdapter();
-     ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
+      
+     /*ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
     		 android.R.layout.simple_list_item_1, list);
-       lvFileSystem.setAdapter(adapter);
-     
+       lvFileSystem.setAdapter(adapter);*/
+        
+        // ArrayAdapter<FolderSys> adapter = new MyFolderSysArrayAdapter();
+     PopulateListView();
         
     }
-  /*  public class MyFolderSysArrayAdapter extends ArrayAdapter<FolderSys> {
+    public class MyFolderSysArrayAdapter extends ArrayAdapter<FolderSys> {
     	public MyFolderSysArrayAdapter() {
     		super(MainActivity.this,R.layout.inner_activity_main,liFolderSys);
     	}
@@ -65,13 +68,23 @@ public class MainActivity extends ActionBarActivity {
 				itemView  = getLayoutInflater().inflate(R.layout.inner_activity_main, parent,false);
 			}
 			FolderSys currentFSys  =  liFolderSys.get(position);
-			ImageView imgView = (ImageView)itemView.findViewById(R.id.icon);
+			ImageView imgView = (ImageView)itemView.findViewById(R.id.imageView1);
 			imgView.setImageResource(currentFSys.getIconId());
+			
+			TextView txtView = (TextView)itemView.findViewById(R.id.textView1);
+			txtView.setText(currentFSys.getText());
 			return itemView;
 			
 			}
     	
-    }*/
+    }
+    
+    public void PopulateListView()
+    {
+    	  ArrayAdapter<FolderSys> adapter = new MyFolderSysArrayAdapter();
+    	  ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
+    	  lvFileSystem.setAdapter(adapter);
+    }
 
 
     @Override
