@@ -7,6 +7,7 @@ import java.util.List;
 //import android.support.v4.widget.SearchViewCompatIcs.MySearchView;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutCompat.OrientationMode;
+import android.content.Context;
 import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
         
         GetFiles objGetFiles=new GetFiles();
         File[] lstOfFiles=Environment.getExternalStorageDirectory().listFiles();
-        liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles);
+        liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
         
       
      /*ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
@@ -56,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
         
         // ArrayAdapter<FolderSys> adapter = new MyFolderSysArrayAdapter();
      PopulateListView();
-     registerThisCallBack();
+     registerThisCallBack(this.getApplicationContext());
         
     }
     public class MyFolderSysArrayAdapter extends ArrayAdapter<FolderSys> {
@@ -73,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 			FolderSys currentFSys  =  liFolderSys.get(position);
 			ImageView imgView = (ImageView)itemView.findViewById(R.id.imageView1);
-			imgView.setImageResource(currentFSys.getIconId());
+			imgView.setImageDrawable(currentFSys.getIconId());
 			
 			TextView txtView = (TextView)itemView.findViewById(R.id.textView1);
 			txtView.setText(currentFSys.getText());
@@ -112,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
     
-    public void registerThisCallBack(){
+    public void registerThisCallBack(final Context context){
     	ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
     	lvFileSystem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
     		public void onItemClick(AdapterView<?> parent, View view,
@@ -122,8 +123,10 @@ public class MainActivity extends ActionBarActivity {
     			//TextView txtView=(TextView) view.findViewById(R.id.textView1);
     			File fileSysFiles=new File(txtViewFullPath.getText().toString());
     			GetFiles objGetFiles=new GetFiles();
+    			//uncomment this line
     			ArrayList<String> lstFiles=new ArrayList<String>();
-    			liFolderSys=objGetFiles.GetSubFiles(fileSysFiles,lstFiles);
+    			liFolderSys=objGetFiles.GetSubFiles(fileSysFiles,lstFiles,context);
+    			if(!liFolderSys.isEmpty())
     		    PopulateListView();
     			Toast.makeText(MainActivity.this, "Clicked at positon = " + 0, Toast.LENGTH_SHORT).show();
     		}

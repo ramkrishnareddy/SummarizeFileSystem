@@ -1,12 +1,14 @@
 package com.example.mytestapp;
 
+import android.graphics.drawable.Drawable;
+
 public class FolderSys {
 	private String text;
-	private int iconId;
+	private Drawable iconId;
 	private String fullPath;
 	
 	
-	public FolderSys(String text, int iconId,String fullPath) {
+	public FolderSys(String text, Drawable iconId,String fullPath) {
 		super();
 		this.text = text;
 		this.iconId = iconId;
@@ -18,10 +20,10 @@ public class FolderSys {
 	public void setText(String text) {
 		this.text = text;
 	}
-	public int getIconId() {
+	public Drawable getIconId() {
 		return iconId;
 	}
-	public void setIconId(int iconId) {
+	public void setIconId(Drawable iconId) {
 		this.iconId = iconId;
 	}
 	public String getFullPath(){
