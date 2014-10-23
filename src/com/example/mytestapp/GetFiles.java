@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -24,7 +25,9 @@ public class GetFiles {
 		    	 // lstOfAllFiles.add(fileText);
 		    	  Uri uri = Uri.fromFile(new File(lstOfFiles[i].getPath()));
 		    	  String fileName = lstOfFiles[i].getName();
-		    	  liFolderSys.add(new FolderSys(fileText, MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),uri,context),lstOfFiles[i].getAbsolutePath()));
+		    	  String fullPath = lstOfFiles[i].getAbsolutePath();
+		    	  Drawable drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context);
+		    	  liFolderSys.add(new FolderSys(fileText,drawableIcon ,fullPath));
 		        System.out.println("File " + lstOfFiles[i].getName());
 		      } else if (lstOfFiles[i].isDirectory()) {
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
@@ -47,9 +50,12 @@ public List<FolderSys> GetSubFiles(File subFile,ArrayList<String> lstOfFileExist
 		return liFolderSys;
 	for (int i = 0; i < lstOfFiles.length; i++) {
 	      if (lstOfFiles[i].isFile()) {
-	    	 
 	    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
-	    	  liFolderSys.add(new FolderSys(fileText, MyIcons.GetFolderIcon(context),lstOfFiles[i].getAbsolutePath()));
+	    	  Uri uri = Uri.fromFile(new File(lstOfFiles[i].getPath()));
+	    	  String fileName = lstOfFiles[i].getName();
+	    	  String fullPath = lstOfFiles[i].getAbsolutePath();
+	    	  Drawable drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context);
+	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,fullPath));
 	        System.out.println("File " + lstOfFiles[i].getName());
 	      } else if (lstOfFiles[i].isDirectory()) {
 	    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());

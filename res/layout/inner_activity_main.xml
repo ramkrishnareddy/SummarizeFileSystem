@@ -6,11 +6,11 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="0dp"
-        
+        android:scaleType="fitXY" 
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -34,5 +34,13 @@
         android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:width="0dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:text="Small Text1"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
