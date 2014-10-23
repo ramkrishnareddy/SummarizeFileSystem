@@ -22,13 +22,14 @@ public class GetFiles {
 		    	  
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
 		    	 // lstOfAllFiles.add(fileText);
-		    	  liFolderSys.add(new FolderSys(fileText, MyIcons.GetFolderIcon(context),lstOfFiles[i].getAbsolutePath()));
+		    	  Uri uri = Uri.fromFile(new File(lstOfFiles[i].getPath()));
+		    	  String fileName = lstOfFiles[i].getName();
+		    	  liFolderSys.add(new FolderSys(fileText, MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),uri,context),lstOfFiles[i].getAbsolutePath()));
 		        System.out.println("File " + lstOfFiles[i].getName());
 		      } else if (lstOfFiles[i].isDirectory()) {
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
 		    	  //lstOfAllFiles.add(fileText);
-		    	  Uri uri = Uri.fromFile(new File(lstOfFiles[i].getPath()));
-		    	  liFolderSys.add(new FolderSys(fileText, MyIcons.GetFileIcon(uri,context),lstOfFiles[i].getAbsolutePath()));
+		    	  liFolderSys.add(new FolderSys(fileText, MyIcons.GetFolderIcon(context),lstOfFiles[i].getAbsolutePath()));
 		    	// lstOfAllFiles= GetSubFiles(lstOfFiles[i],lstOfAllFiles);
 		        System.out.println("Directory " + lstOfFiles[i].getName());
 		      }

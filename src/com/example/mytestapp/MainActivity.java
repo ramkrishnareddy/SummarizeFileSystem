@@ -2,6 +2,7 @@ package com.example.mytestapp;
 
 import java.io.Externalizable;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +17,7 @@ import android.content.Context;
 import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -133,7 +135,7 @@ public class MainActivity extends ActionBarActivity {
     	              int position, long id) {
     			
     			TextView txtViewFullPath=(TextView) view.findViewById(R.id.textView2);
-    			//TextView txtView=(TextView) view.findViewById(R.id.textView1);
+    			TextView txtView=(TextView) view.findViewById(R.id.textView1);
     			File fileSysFiles=new File(txtViewFullPath.getText().toString());
     			GetFiles objGetFiles=new GetFiles();
     			//uncomment this line
@@ -148,7 +150,17 @@ public class MainActivity extends ActionBarActivity {
     		             } );
     		    PopulateListView();
     			}
-    			Toast.makeText(MainActivity.this, "Clicked at positon = " + 0, Toast.LENGTH_SHORT).show();
+    			else{
+    			//	String fileName=txtView.getText().toString().substring(0, txtView.getText().toString().lastIndexOf(":"));
+    				File myFile = new File(txtViewFullPath.getText().toString());
+    				try {
+						FileOpen.openFile(context, myFile);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			}
+    		//	Toast.makeText(MainActivity.this, "Clicked at positon = " + 0, Toast.LENGTH_SHORT).show();
     		}
     		
 		});
@@ -163,4 +175,34 @@ public class MainActivity extends ActionBarActivity {
         }
         return false;
     }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if ( keyCode == KeyEvent.KEYCODE_BACK) {
+        	ListView myList=(ListView)findViewById(R.id.listview);
+        	View listItem=(View)myList.getChildAt(0);
+        	TextView txtViewFullPath=(TextView) listItem.findViewById(R.id.textView2);
+        	int endId=txtViewFullPath.getText().toString().lastIndexOf("/");
+        	String path=txtViewFullPath.getText().toString().substring(0, txtViewFullPath.getText().toString().lastIndexOf("/"));
+        	path=path.substring(0, path.lastIndexOf("/"));
+        	if(path.length()==0)
+        		path=Environment.getRootDirectory().getParent();
+        	File fileSysFiles=new File(path);
+			GetFiles objGetFiles=new GetFiles();
+			//uncomment this line
+			ArrayList<String> lstFiles=new ArrayList<String>();
+			Context context=this.getApplicationContext();
+			liFolderSys=objGetFiles.GetSubFiles(fileSysFiles,lstFiles,context);
+			if(!liFolderSys.isEmpty()){
+				Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+		              @Override
+		              public int compare(final FolderSys object1, final FolderSys object2) {
+		                  return object1.getText().compareTo(object2.getText());
+		              }
+		             } );
+		    PopulateListView();
+			}
+        }
+    return false;
+        }
 }
