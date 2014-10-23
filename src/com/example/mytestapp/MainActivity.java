@@ -1,7 +1,12 @@
 package com.example.mytestapp;
 
+import java.io.Externalizable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 //import android.support.v4.widget.SearchViewCompatIcs.MySearchView;
@@ -46,10 +51,18 @@ public class MainActivity extends ActionBarActivity {
         
         
         GetFiles objGetFiles=new GetFiles();
-        File[] lstOfFiles=Environment.getExternalStorageDirectory().listFiles();
-        liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
         
-      
+        File[] lstOfFiles=Environment.getExternalStorageDirectory().listFiles();
+       // liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
+        
+         lstOfFiles=new File(Environment.getRootDirectory().getParent()).listFiles();
+          liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
+          Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+              @Override
+              public int compare(final FolderSys object1, final FolderSys object2) {
+                  return object1.getText().compareTo(object2.getText());
+              }
+             } );
      /*ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
     		 android.R.layout.simple_list_item_1, list);
@@ -126,13 +139,28 @@ public class MainActivity extends ActionBarActivity {
     			//uncomment this line
     			ArrayList<String> lstFiles=new ArrayList<String>();
     			liFolderSys=objGetFiles.GetSubFiles(fileSysFiles,lstFiles,context);
-    			if(!liFolderSys.isEmpty())
+    			if(!liFolderSys.isEmpty()){
+    				Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+    		              @Override
+    		              public int compare(final FolderSys object1, final FolderSys object2) {
+    		                  return object1.getText().compareTo(object2.getText());
+    		              }
+    		             } );
     		    PopulateListView();
+    			}
     			Toast.makeText(MainActivity.this, "Clicked at positon = " + 0, Toast.LENGTH_SHORT).show();
     		}
     		
 		});
     }
     
-    
+    /* Checks if external storage is available to at least read */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+            Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 }
