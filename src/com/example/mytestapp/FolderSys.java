@@ -10,7 +10,7 @@ public class FolderSys {
 	//private String itemsCount;
 	
 	
-	public FolderSys(String text, Drawable iconId,String fullPath) {
+	public FolderSys(String text, Drawable iconId,String fullPath/*,String itemsCount*/) {
 		super();
 		this.text = text;
 		this.iconId = iconId;
@@ -36,7 +36,8 @@ public class FolderSys {
 	public void setFullPath(String fullPath){
 		this.fullPath=fullPath;
 	}
-	/*public String getItemsCount() {
+	/*
+	public String getItemsCount() {
 		return itemsCount;
 	}
 	public void setItemsCount(String itemsCount) {
