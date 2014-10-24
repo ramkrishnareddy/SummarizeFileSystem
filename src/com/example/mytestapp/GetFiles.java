@@ -26,16 +26,18 @@ public class GetFiles {
 		    	  Uri uri = Uri.fromFile(new File(lstOfFiles[i].getPath()));
 		    	  String fileName = lstOfFiles[i].getName();
 		    	  String fullPath = lstOfFiles[i].getAbsolutePath();
-		    	  //String subFilesCount =  lstOfFiles[i].listFiles().length + " Items";
+		    	  String fileSize=humanReadableByteCount(lstOfFiles[i].length(), false);
 		    	  Drawable drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context);
-		    	  liFolderSys.add(new FolderSys(fileText,drawableIcon ,fullPath/*,subFilesCount*/));
+		    	  liFolderSys.add(new FolderSys(fileText,drawableIcon ,fullPath,fileSize));
 		        System.out.println("File " + lstOfFiles[i].getName());
 		      } else if (lstOfFiles[i].isDirectory()) {
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
 		    	  //lstOfAllFiles.add(fileText);
 		    	  Drawable drawableIcon =MyIcons.GetFolderIcon(context);
-		    	  //String subFilesCount =  lstOfFiles[i].listFiles().length + " Items";
-		    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath()/*,subFilesCount*/));
+		    	  String subFilesCount ="Empty";
+		    	  if(lstOfFiles[i].listFiles()!=null)
+		    	   subFilesCount =  lstOfFiles[i].listFiles().length + " Items";
+		    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath(),subFilesCount));
 		    	// lstOfAllFiles= GetSubFiles(lstOfFiles[i],lstOfAllFiles);*/
 		        System.out.println("Directory " + lstOfFiles[i].getName());
 		      }
@@ -57,16 +59,18 @@ public List<FolderSys> GetSubFiles(File subFile,ArrayList<String> lstOfFileExist
 	    	  Uri uri = Uri.fromFile(new File(lstOfFiles[i].getPath()));
 	    	  String fileName = lstOfFiles[i].getName();
 	    	  String fullPath = lstOfFiles[i].getAbsolutePath();
-	    	  //String subFilesCount =  lstOfFiles[i].listFiles().length + " Items";
+	    	  String fileSize=humanReadableByteCount(lstOfFiles[i].length(), false);
 	    	  Drawable drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context);
-	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,fullPath/*,subFilesCount*/));
+	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,fullPath,fileSize));
 	        System.out.println("File " + lstOfFiles[i].getName());
 	      } else if (lstOfFiles[i].isDirectory()) {
 	    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
 	    	 // lstOfAllFiles.add(fileText);
 	    	  Drawable drawableIcon =  MyIcons.GetFolderIcon(context);
-	    	  //String subFilesCount =  lstOfFiles[i].listFiles().length + " Items";
-	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath()/*,subFilesCount*/));
+	    	  String subFilesCount ="Empty";
+	    	  if(lstOfFiles[i].listFiles()!=null)
+	    	   subFilesCount =  lstOfFiles[i].listFiles().length + " Items";
+	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath(),subFilesCount));
 	      }
 }
 	return liFolderSys;
@@ -77,5 +81,13 @@ public String GetConvertedFormatDate(long val){
 	  SimpleDateFormat smpDateFor=new SimpleDateFormat("dd/MM/yy");
 	String strDateFormat=smpDateFor.format(date);
 	return strDateFormat;
+}
+
+public static String humanReadableByteCount(long bytes, boolean si) {
+    int unit = si ? 1000 : 1024;
+    if (bytes < unit) return bytes + " B";
+    int exp = (int) (Math.log(bytes) / Math.log(unit));
+    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "");
+    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 }
 }

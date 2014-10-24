@@ -23,12 +23,12 @@ import android.content.pm.PackageManager;;
 	
  public static Drawable GetFileIcon(String fileType,String fullPath,Uri fileUri,Context context)
  {
-	 List<String> lstFileTypes =Arrays.asList("aac","ai","aiff","android_foldericon","android_foldericon72crosss72","asp","avi","bmp","c","cpp","css","dat","dmg","doc","docx","dot","dotx","dwg","dxf","eps","exe","flv","gif","h","html","ics","ic_launcher","iso","java","jpg","key","m4v","mid","mov","mp3","mp4","mpg","odp","ods","odt","otp","ots","ott","pdf","php","png","pps","ppt","psd","py","qt","rar","rb","rtf","sql","tga","tgz","tiff","txt","unknown_icon","wav","xls","xlsx","xml","yml","zip");
+	 List<String> lstFileTypes =Arrays.asList("jpeg","aac","ai","aiff","android_foldericon","android_foldericon72crosss72","asp","avi","bmp","c","cpp","css","dat","dmg","doc","docx","dot","dotx","dwg","dxf","eps","exe","flv","gif","h","html","ics","ic_launcher","iso","java","jpg","key","m4v","mid","mov","mp3","mp4","mpg","odp","ods","odt","otp","ots","ott","pdf","php","png","pps","ppt","psd","py","qt","rar","rb","rtf","sql","tga","tgz","tiff","txt","unknown_icon","wav","xls","xlsx","xml","yml","zip");
 	 Drawable myDrawable = context.getResources().getDrawable(R.drawable.unknown_icon); 
 
 	     if(lstFileTypes.contains(fileType))
 	     {
-	    	 if(fileType.equals("png") || fileType.equals("jpg"))
+	    	 if(fileType.equals("png") || fileType.equals("jpg") || fileType.equals("jpeg"))
 	    	 {
 	    		 myDrawable = Drawable.createFromPath(fullPath);
 	    		 //Bitmap btmpa=convertToBitmap(myDrawable, 10, 10);

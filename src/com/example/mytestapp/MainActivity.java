@@ -95,8 +95,8 @@ public class MainActivity extends ActionBarActivity {
 			txtView.setText(currentFSys.getText());
 			TextView txtViewPath=(TextView)itemView.findViewById(R.id.textView2);
 			txtViewPath.setText(currentFSys.getFullPath());
-			//TextView txtViewItemsCount=(TextView)itemView.findViewById(R.id.textView3);
-			//txtViewItemsCount.setText(currentFSys.getItemsCount());
+			TextView txtViewItemsCount=(TextView)itemView.findViewById(R.id.textView3);
+			txtViewItemsCount.setText(currentFSys.getItemsCount());
 			return itemView;
 			
 			}
@@ -180,16 +180,21 @@ public class MainActivity extends ActionBarActivity {
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
-    	try{
+    	
         if ( keyCode == KeyEvent.KEYCODE_BACK) {
         	ListView myList=(ListView)findViewById(R.id.listview);
         	View listItem=(View)myList.getChildAt(0);
         	TextView txtViewFullPath=(TextView) listItem.findViewById(R.id.textView2);
         	int endId=txtViewFullPath.getText().toString().lastIndexOf("/");
         	String path=txtViewFullPath.getText().toString().substring(0, txtViewFullPath.getText().toString().lastIndexOf("/"));
+        	if(endId==0){
+        		this.finish();
+        		return super.onKeyDown(keyCode, event);
+        	}
         	path=path.substring(0, path.lastIndexOf("/"));
         	if(path.length()==0)
         		path=Environment.getRootDirectory().getParent();
+        	
         	File fileSysFiles=new File(path);
 			GetFiles objGetFiles=new GetFiles();
 			//uncomment this line
@@ -205,11 +210,9 @@ public class MainActivity extends ActionBarActivity {
 		             } );
 		    PopulateListView();
 			}
+			
         }
-    	}
-    	catch(Exception ex){
-    		ex.printStackTrace();
-    	}
+    	
     return false;
         }
 }
