@@ -9,7 +9,36 @@
     android:orientation="vertical"
     tools:context="com.example.mytestapp.MainActivity" >
 
-   
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+       android:orientation="horizontal">
+         <Spinner
+    	android:id="@+id/storagetype_spinner"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content" />
+         
+          <Spinner
+    	android:id="@+id/spinner_SortType"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/storagetype_spinner"
+    	 android:entries="@array/sort_types"
+    	 />
+    
+    	<ImageButton
+        android:id="@+id/imgBtnGridSort"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right" 
+       
+        android:src="@drawable/grid" />
+    	
+        
+     
+    </RelativeLayout>
+
    
       
     <ListView 

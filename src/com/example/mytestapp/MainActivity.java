@@ -12,6 +12,8 @@ import java.util.List;
 
 //import android.support.v4.widget.SearchViewCompatIcs.MySearchView;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.appcompat.R.bool;
+import android.support.v7.internal.widget.AdapterViewCompat.OnItemSelectedListener;
 import android.support.v7.widget.LinearLayoutCompat.OrientationMode;
 import android.content.Context;
 import android.location.GpsStatus.Listener;
@@ -23,17 +25,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 
 	String[] days = {"sun","mon","tues","wed","thus","fri"};
 	private List<FolderSys> liFolderSys =new ArrayList<FolderSys>();
+	String[] sortType = {"Name","Size","LastModified"};
+	
 	
 	ListView lvFileSystem;
     @Override
@@ -47,33 +54,24 @@ public class MainActivity extends ActionBarActivity {
         	list.add(days[i]);
         }
         
-       /* for (int i = 0; i < days.length; ++i) {
-        	liFolderSys.add(new FolderSys(days[i], R.drawable.ic_launcher));
-        }*/
+        final GetFiles objGetFiles=new GetFiles();
         
-        
-        GetFiles objGetFiles=new GetFiles();
-        
-        File[] lstOfFiles=Environment.getExternalStorageDirectory().listFiles();
+        final File[] lstOfFiles=Environment.getExternalStorageDirectory().listFiles();
        // liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
         
-         lstOfFiles=new File(Environment.getRootDirectory().getParent()).listFiles();
-          liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
-          Collections.sort(liFolderSys, new Comparator<FolderSys>() {
-              @Override
-              public int compare(final FolderSys object1, final FolderSys object2) {
-                  return object1.getText().compareTo(object2.getText());
-              }
-             } );
-     /*ListView  lvFileSystem = (ListView)findViewById(R.id.listview);
-       ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-    		 android.R.layout.simple_list_item_1, list);
-       lvFileSystem.setAdapter(adapter);*/
+        final Spinner spinner = PopulateSpinner();
+         String absPath =Environment.getExternalStorageDirectory().getPath();
+       //  String selectedSpinnerText = spinner.getSelectedItem().toString();
+       
         
-        // ArrayAdapter<FolderSys> adapter = new MyFolderSysArrayAdapter();
+        
+        GetAllFilesDependSpinner(lstOfFiles,objGetFiles,absPath,false);
+          
      PopulateListView();
      registerThisCallBack(this.getApplicationContext());
-        
+     addListenerOnGridButton();
+     addOnSelectClickListenerForStorageSpinner(lstOfFiles, objGetFiles);
+     addOnSelectClickListenerForSortSpinner(lstOfFiles, objGetFiles);
     }
     public class MyFolderSysArrayAdapter extends ArrayAdapter<FolderSys> {
     	public MyFolderSysArrayAdapter() {
@@ -180,6 +178,7 @@ public class MainActivity extends ActionBarActivity {
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
+
     	
         if ( keyCode == KeyEvent.KEYCODE_BACK) {
         	ListView myList=(ListView)findViewById(R.id.listview);
@@ -215,4 +214,125 @@ public class MainActivity extends ActionBarActivity {
     	
     return false;
         }
+    
+    public Spinner PopulateSpinner()
+    {
+    	Spinner spinner = (Spinner) findViewById(R.id.storagetype_spinner);
+    	// Create an ArrayAdapter using the string array and a default spinner layout
+    	ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+    	        R.array.storage_types, android.R.layout.simple_spinner_item);
+    	// Specify the layout to use when the list of choices appears
+    	adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    	// Apply the adapter to the spinner
+    	spinner.setAdapter(adapter);
+       return spinner;
+    }
+    public void GetAllFilesDependSpinner(File[] lstOfFiles,GetFiles objGetFiles,String absPath,boolean boolSDCard){
+    	lstOfFiles=new File(absPath).listFiles();
+        liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext(),boolSDCard);
+        Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+            @Override
+            public int compare(final FolderSys object1, final FolderSys object2) {
+                return object1.getText().compareTo(object2.getText());
+            }
+           } );
+    	
+    }
+    public String GetAbsPath(String selectedSpinnerText){
+    	String absPath="";
+    if(selectedSpinnerText.equals("root"))
+        {
+        	absPath = Environment.getRootDirectory().getParent();
+        }
+        else if(selectedSpinnerText.equals("InternalStorage"))
+        {
+        	absPath = Environment.getExternalStorageDirectory().getPath();
+        } 
+        else{
+        	
+        	absPath = Environment.getRootDirectory().getParent();
+        }
+    return absPath;
+    }
+    
+    public void addListenerOnGridButton() {
+    	ImageButton ib = (ImageButton) findViewById(R.id.imgBtnGridSort);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	
+            }
+        });
+    }
+    
+    public void addOnSelectClickListenerForStorageSpinner(final File[] lstOfFiles,final GetFiles objGetFiles)
+    {
+    	final Spinner spinnerStorage = (Spinner) findViewById(R.id.storagetype_spinner);
+    	spinnerStorage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { 
+                 // Your code here
+             	String absPath="";
+             	boolean boolsdCard=false;
+             	String selectedSpinnerText=spinnerStorage.getSelectedItem().toString();
+             	 if(selectedSpinnerText.equals("SDCard"))
+                  {
+             		// if(isExternalStorageReadable())
+             			// PopulateListView();
+             	boolsdCard=true;
+                  }
+             	absPath=GetAbsPath(selectedSpinnerText);
+             	GetAllFilesDependSpinner(lstOfFiles, objGetFiles, absPath,boolsdCard);
+             	 PopulateListView();
+                  
+             } 
+
+             public void onNothingSelected(AdapterView<?> adapterView) {
+                 return;
+             } 
+         }); 
+    }
+    public void addOnSelectClickListenerForSortSpinner(final File[] lstOfFiles,final GetFiles objGetFiles)
+    {
+    	final Spinner spinnerSortType = (Spinner) findViewById(R.id.spinner_SortType);
+    	spinnerSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { 
+            	 String selectedSpinnerText=spinnerSortType.getSelectedItem().toString();
+            	 SortFolderSys(selectedSpinnerText);
+            	 PopulateListView();
+             }
+             public void onNothingSelected(AdapterView<?> adapterView) {
+                 return;
+             } 
+    	});
+     }
+    public void SortFolderSys(String sortType){
+    	if(sortType.equals("Size")){
+    	Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+            @Override
+            public int compare(final FolderSys object1, final FolderSys object2) {
+                return Long.valueOf(object1.getFileSize()).compareTo(object2.getFileSize());
+            }
+           } );
+    	}
+    	else if(sortType.equals("LastModified"))
+    	{
+    		Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+                @Override
+                public int compare(final FolderSys object1, final FolderSys object2) {
+                    return Long.valueOf(object1.getDateOfModified()).compareTo(object2.getDateOfModified());
+                }
+               } );
+    	}
+    	else{
+    		Collections.sort(liFolderSys, new Comparator<FolderSys>() {
+                @Override
+                public int compare(final FolderSys object1, final FolderSys object2) {
+                    return object1.getText().compareTo(object2.getText());
+                }
+               } );
+    	}
+    }
+    
+    
 }

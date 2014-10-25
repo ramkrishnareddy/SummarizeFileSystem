@@ -8,14 +8,18 @@ public class FolderSys {
 	private Drawable iconId;
 	private String fullPath;
 	private String itemsCount;
+	private long fileOrFolderSize;
+	private long dateOfModified;
 	
 	
-	public FolderSys(String text, Drawable iconId,String fullPath,String itemsCount) {
+	public FolderSys(String text, Drawable iconId,String fullPath,String itemsCount,long fileOrFolderSize,long dateOfModified) {
 		super();
 		this.text = text;
 		this.iconId = iconId;
 		this.fullPath=fullPath;
 		this.itemsCount = itemsCount;
+		this.fileOrFolderSize=fileOrFolderSize;
+		this.dateOfModified=dateOfModified;
 	}
 	public String getText() {
 		return text;
@@ -42,5 +46,15 @@ public class FolderSys {
 	public void setItemsCount(String itemsCount) {
 		this.itemsCount= itemsCount;
 	}
-
+	public long getFileSize() {
+		return fileOrFolderSize;
+	}
+	public void setFileOrFolderSize(long fileOrFoldderSize) {
+		this.fileOrFolderSize= fileOrFoldderSize;
+	}public long getDateOfModified() {
+		return dateOfModified;
+	}
+	public void setDateOfModified(long dateOfModified) {
+		this.dateOfModified= dateOfModified;
+	}
 }
