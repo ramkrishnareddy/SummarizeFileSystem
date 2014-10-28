@@ -5,11 +5,14 @@ import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.entity.FileEntity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -33,14 +36,17 @@ public class GetFiles {
 		    	  String fileName = lstOfFiles[i].getName();
 		    	  String fullPath = lstOfFiles[i].getAbsolutePath();
 		    	  String fileSize=humanReadableByteCount(lstOfFiles[i].length(), false);
-		    	  Drawable drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context);
-		    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,fullPath,fileSize,fileOrFolderSize,lstOfFiles[i].lastModified()));;
+		    	  FolderSys objFolderSys=new FolderSys(fileText,fullPath,fileSize,fileOrFolderSize,lstOfFiles[i].lastModified());
+		    	  Bitmap drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context,objFolderSys);
+		    	  objFolderSys.setIconId(drawableIcon);
+		    	  if(objFolderSys!=null)
+		    	  liFolderSys.add(objFolderSys);
 		        System.out.println("File " + lstOfFiles[i].getName());
 		      } else if (lstOfFiles[i].isDirectory()) {
 		    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
 		    	  //lstOfAllFiles.add(fileText);
 		    	  
-		    	  Drawable drawableIcon =MyIcons.GetFolderIcon(context);
+		    	  Bitmap drawableIcon =MyIcons.GetFolderIcon(context);
 		    	  String subFilesCount ="Empty";
 		    	  long fileSize=0;
 		     	  if(lstOfFiles[i].listFiles()!=null && lstOfFiles[i].listFiles().length!=0){
@@ -50,7 +56,9 @@ public class GetFiles {
 			    	  }
 			    	  else
 			    		  fileOrFolderSize=0;
-			    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath(),subFilesCount,fileSize,lstOfFiles[i].lastModified()));
+		     	  FolderSys objFolderSys=new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath(),subFilesCount,fileSize,lstOfFiles[i].lastModified());
+		     	 if(objFolderSys!=null)
+			    	  liFolderSys.add(objFolderSys);
 		    	 
 		    	  }
 		    	// lstOfAllFiles= GetSubFiles(lstOfFiles[i],lstOfAllFiles);*/
@@ -63,7 +71,8 @@ public class GetFiles {
 	    	  {
 	    		  File[] lstOfSDCardFiles=lstOfFiles[i].listFiles();
 	    		 for(int j=0;j<lstOfFiles[i].listFiles().length;j++){
-	    			if(j==0 || j==2)    			{
+	    			if((j==0 && lstOfFiles[i].listFiles().length==2) || j==2)    			{
+	    				liFolderSys =new ArrayList<FolderSys>();
 	    				liFolderSys=  GetSubFiles(lstOfSDCardFiles[j] ,new ArrayList<String>(), context);
 	    			}
 	    			// if()
@@ -93,13 +102,16 @@ public List<FolderSys> GetSubFiles(File subFile,ArrayList<String> lstOfFileExist
 	    	  String fileName = lstOfFiles[i].getName();
 	    	  String fullPath = lstOfFiles[i].getAbsolutePath();
 	    	  String fileSize=humanReadableByteCount(lstOfFiles[i].length(), false);
-	    	  Drawable drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context);
-	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,fullPath,fileSize,fileOrFolderSize,lstOfFiles[i].lastModified()));
+	    	  FolderSys objFolderSys=new FolderSys(fileText,fullPath,fileSize,fileOrFolderSize,lstOfFiles[i].lastModified());
+	    	  Bitmap drawableIcon =  MyIcons.GetFileIcon(fileName .substring(fileName.lastIndexOf(".")+1),fullPath,uri,context,objFolderSys);
+	    	  objFolderSys.setIconId(drawableIcon);
+	    	  if(objFolderSys!=null)
+	    	  liFolderSys.add(objFolderSys);
 	        System.out.println("File " + lstOfFiles[i].getName());
 	      } else if (lstOfFiles[i].isDirectory()) {
 	    	  fileText=lstOfFiles[i].getName() + " : "+GetConvertedFormatDate(lstOfFiles[i].lastModified());
 	    	 // lstOfAllFiles.add(fileText);
-	    	  Drawable drawableIcon =  MyIcons.GetFolderIcon(context);
+	    	  Bitmap drawableIcon =  MyIcons.GetFolderIcon(context);
 	    	  String subFilesCount ="Empty";
 	    	  long fileSize=0;
 	    	  if(lstOfFiles[i].listFiles()!=null && lstOfFiles[i].listFiles().length!=0){
@@ -109,9 +121,12 @@ public List<FolderSys> GetSubFiles(File subFile,ArrayList<String> lstOfFileExist
 	    	  }
 	    	  else
 	    		  fileOrFolderSize=0;
-	    	  liFolderSys.add(new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath(),subFilesCount,fileSize,lstOfFiles[i].lastModified()));
+	    	  FolderSys objFolderSys=new FolderSys(fileText,drawableIcon,lstOfFiles[i].getAbsolutePath(),subFilesCount,fileSize,lstOfFiles[i].lastModified());
+	    	  if(objFolderSys!=null)
+	    	  liFolderSys.add(objFolderSys);
 	      }
 }
+
 	return liFolderSys;
 	}
 
