@@ -1,5 +1,6 @@
 package com.example.mytestapp;
 
+import java.util.BitSet;
 import java.util.concurrent.locks.Lock;
 
 import com.example.mytestapp.MainActivity.MyFolderSysArrayAdapter;
@@ -73,18 +74,18 @@ public class FolderSys {
 	public void setDateOfModified(long dateOfModified) {
 		this.dateOfModified= dateOfModified;
 	}
+	public void setMyFolderSysArrayAdapter(MyFolderSysArrayAdapter myFolderSysAdapter)
+	{
+		// HOLD A REFERENCE TO THE ADAPTER
+		this.myFolderSysAdapter = myFolderSysAdapter;
+	}
 	
-	public void loadImage(MyFolderSysArrayAdapter myFolderSysAdapter) {
-        // HOLD A REFERENCE TO THE ADAPTER
-		 
-        this.myFolderSysAdapter = myFolderSysAdapter;
-        //iconId = Drawable.createFromPath(fullPath);
-		  myFolderSysAdapter.notifyDataSetChanged();
-		  //new ImageLoadTask().execute(fullPath);
+	public void lazyloadImage( ) {
+		 new BitmapWorkerTask().execute(fullPath);  
     }
 	
 	
-	public  class ImageLoadTask extends AsyncTask<String, String,Void> {
+	public  class BitmapWorkerTask extends AsyncTask<String,Void,Void> {
 		 @Override
 	     //protected void onPreExecute() {
 	       //  Log.i("ImageLoadTask", "Loading image...");
@@ -92,40 +93,30 @@ public class FolderSys {
 
 	     // PARAM[0] IS IMG URL
 	     protected Void doInBackground(String... param) {
-	    	 
-	    	 //Log.i("ImageLoadTask", "Attempting to load image URL: " + param[0]);
-	         
-	         try {
-	        	 if(param[0]!=null){
-				 //iconId = Drawable.createFromPath(param[0]);
+				  iconId =  HandleBitmaps.decodeSampledBitmapFromFile(param[0], 50, 50);
 				  myFolderSysAdapter.notifyDataSetChanged();
-	        	 }
-	         } catch (OutOfMemoryError e) {
-	             e.printStackTrace();
-      	         //    return myDrawable;
-	         }
-	         //System.gc();
-	         return null;
+				  return null;
 	     }
 
 	    // protected void onProgressUpdate(String... progress) {
 	         // NO OP
 	    // }
 
-	     /*
-	     protected void onPostExecute(Drawable ret) {
-	         if (ret != null) {
-	             Log.i("ImageLoadTask", "Successfully loaded " + text + " image");
-	             iconId = ret;
+	     
+	     protected void onPostExecute() {
+	        //if (ret != null) {
+	        //     Log.i("ImageLoadTask", "Successfully loaded " + text + " image");
+	       //      iconId = ret;
 	                 // WHEN IMAGE IS LOADED NOTIFY THE ADAPTER
-	           //  myFolderSysAdapter.notifyDataSetChanged();
+	            
 	             
 	           
-	         } else {
-	             Log.e("ImageLoadTask", "Failed to load " + text + " image");
-	         }
-	         System.gc();
-	     }*/
+	         //} 
+	             //else {
+	       //    Log.e("ImageLoadTask", "Failed to load " + text + " image");
+	        // }
+	       //  System.gc();
+	     }
 
 	}
 }

@@ -38,9 +38,11 @@ public class MainActivity extends ActionBarActivity {
 
 	private List<FolderSys> liFolderSys = new ArrayList<FolderSys>();
 	String[] sortType = { "Name", "Size", "LastModified" };
+	String[] arrayImageTypes = {".jpg",".png",".jpeg"};
 
 	ListView lvFileSystem;
 	MyFolderSysArrayAdapter myFolderSysArrayAdapter;
+	String selectedStorageSpinnerText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +54,14 @@ public class MainActivity extends ActionBarActivity {
 
 		// liFolderSys=objGetFiles.GetFilesFromPath(lstOfFiles,this.getApplicationContext());
 
-		final Spinner spinner = PopulateSpinner();
-		String absPath = Environment.getExternalStorageDirectory().getPath();
-		// String selectedSpinnerText = spinner.getSelectedItem().toString();
-
+		final Spinner spinnerStorage = PopulateSpinner();
+		selectedStorageSpinnerText = spinnerStorage.getSelectedItem()
+				.toString();
+		String absPath = GetAbsPath(selectedStorageSpinnerText);
 		final File[] lstOfFiles = GetAllFilesDependSpinner(objGetFiles,
 				absPath, false);
 		myFolderSysArrayAdapter = new MyFolderSysArrayAdapter();
-		PopulateListView();
+		BindAdapterToListview();
 		registerThisCallBack(this.getApplicationContext());
 		addOnSelectClickListenerForStorageSpinner(objGetFiles);
 		addOnSelectClickListenerForSortSpinner(objGetFiles);
@@ -79,8 +81,12 @@ public class MainActivity extends ActionBarActivity {
 				itemView = getLayoutInflater().inflate(
 						R.layout.inner_activity_main, parent, false);
 			}
-			
+			//TODO Sagar: Multi Bindings 
+        if(liFolderSys.size()>position)
+        {
 			FolderSys currentFSys = liFolderSys.get(position);
+			try
+			{
 			ImageView imgView = (ImageView) itemView
 					.findViewById(R.id.imageView1);
 			imgView.setImageBitmap(currentFSys.getIconId());
@@ -92,14 +98,20 @@ public class MainActivity extends ActionBarActivity {
 			TextView txtViewItemsCount = (TextView) itemView
 					.findViewById(R.id.textView3);
 			txtViewItemsCount.setText(currentFSys.getItemsCount());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+        }
 			return itemView;
 
 		}
 
 	}
 
-	public MyFolderSysArrayAdapter PopulateListView() {
-		
+	public MyFolderSysArrayAdapter BindAdapterToListview() {
+
 		ListView lvFileSystem = (ListView) findViewById(R.id.listview);
 		lvFileSystem.setAdapter(myFolderSysArrayAdapter);
 		return myFolderSysArrayAdapter;
@@ -144,7 +156,7 @@ public class MainActivity extends ActionBarActivity {
 								lstFiles, context);
 						if (!liFolderSys.isEmpty()) {
 							SortFolderSys("");
-							PopulateListView();
+							BindAdapterToListview();
 						} else {
 							// String
 							// fileName=txtView.getText().toString().substring(0,
@@ -209,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
 					context);
 			if (!liFolderSys.isEmpty()) {
 				SortFolderSys("");
-				PopulateListView();
+				BindAdapterToListview();
 			}
 
 		}
@@ -247,7 +259,7 @@ public class MainActivity extends ActionBarActivity {
 		} else if (selectedSpinnerText.equals("InternalStorage")) {
 			absPath = Environment.getExternalStorageDirectory().getPath();
 		} else {
-
+            //TODO Sagar: Give ExternalStorage 
 			absPath = Environment.getRootDirectory().getParent();
 		}
 		return absPath;
@@ -259,20 +271,26 @@ public class MainActivity extends ActionBarActivity {
 		ib.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//liFolderSys.get(0).loadImage(myFolderSysArrayAdapter);
-	//		liFolderSys.get(1).loadImage(myFolderSysArrayAdapter);
-		//		liFolderSys.get(2).loadImage(myFolderSysArrayAdapter);
-				//liFolderSys.get(3).loadImage(myFolderSysArrayAdapter);
-				//for (FolderSys fSys : liFolderSys) {
-					//if (fSys.getFullPath().endsWith(".jpg")) {
-				         //loadImage(myFolderSysArrayAdapter);
-						
-					//}
-				//}
+				// liFolderSys.get(0).loadImage(myFolderSysArrayAdapter);
+				// liFolderSys.get(1).loadImage(myFolderSysArrayAdapter);
+				// liFolderSys.get(2).loadImage(myFolderSysArrayAdapter);
+				// liFolderSys.get(3).loadImage(myFolderSysArrayAdapter);
+				// for (FolderSys fSys : liFolderSys) {
+				// if (fSys.getFullPath().endsWith(".jpg")) {
+				// loadImage(myFolderSysArrayAdapter);
+
+				// }
+				// }
+				/*
 				for (int i = 0; i < liFolderSys.size(); i++) {
-					if (liFolderSys.get(i).getFullPath().endsWith(".jpg"))
-						liFolderSys.get(i).loadImage(myFolderSysArrayAdapter);
-				}
+					//TODO : Sagar Proper Way of Finding Extension
+					liFolderSys.get(i).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
+					String fullPath = liFolderSys.get(i).getFullPath();
+					if(fullPath.endsWith("png") || fullPath.endsWith("jpg") || fullPath.endsWith("jpeg"))
+						liFolderSys.get(i).lazyloadImage();
+				}*/
+				liFolderSys.get(0).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
+				liFolderSys.get(0).lazyloadImage();
 			}
 		});
 	}
@@ -287,17 +305,21 @@ public class MainActivity extends ActionBarActivity {
 						// Your code here
 						String absPath = "";
 						boolean boolsdCard = false;
-						String selectedSpinnerText = spinnerStorage
+						String currentSelectedSpinnerText = spinnerStorage
 								.getSelectedItem().toString();
-						if (selectedSpinnerText.equals("SDCard")) {
+						if(selectedStorageSpinnerText != currentSelectedSpinnerText)
+						{
+							selectedStorageSpinnerText = currentSelectedSpinnerText;
+						if (selectedStorageSpinnerText.equals("SDCard")) {
 							// if(isExternalStorageReadable())
-							// PopulateListView();
+							// BindAdapterToListview();
 							boolsdCard = true;
 						}
-						absPath = GetAbsPath(selectedSpinnerText);
+						absPath = GetAbsPath(selectedStorageSpinnerText);
 						GetAllFilesDependSpinner(objGetFiles, absPath,
 								boolsdCard);
-						PopulateListView();
+						BindAdapterToListview();
+						}
 
 					}
 
@@ -317,7 +339,7 @@ public class MainActivity extends ActionBarActivity {
 						String selectedSpinnerText = spinnerSortType
 								.getSelectedItem().toString();
 						SortFolderSys(selectedSpinnerText);
-						PopulateListView();
+						BindAdapterToListview();
 					}
 
 					public void onNothingSelected(AdapterView<?> adapterView) {
@@ -328,7 +350,7 @@ public class MainActivity extends ActionBarActivity {
 
 	public void SortFolderSys(String sortType) {
 		Spinner spinnerSortType = (Spinner) findViewById(R.id.spinner_SortType);
-		sortType=spinnerSortType.getSelectedItem().toString();
+		sortType = spinnerSortType.getSelectedItem().toString();
 		if (sortType.equals("Size")) {
 			Collections.sort(liFolderSys, new Comparator<FolderSys>() {
 				@Override
