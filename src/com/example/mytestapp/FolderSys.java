@@ -87,9 +87,9 @@ public class FolderSys {
 	
 	public  class BitmapWorkerTask extends AsyncTask<String,Void,Void> {
 		 @Override
-	     //protected void onPreExecute() {
-	       //  Log.i("ImageLoadTask", "Loading image...");
-	     //}
+	     protected void onPreExecute() {
+	         //Log.i("ImageLoadTask", "Loading image...");
+	     }
 
 	     // PARAM[0] IS IMG URL
 	     protected Void doInBackground(String... param) {

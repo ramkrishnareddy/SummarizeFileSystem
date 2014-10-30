@@ -66,6 +66,12 @@ public class MainActivity extends ActionBarActivity {
 		addOnSelectClickListenerForStorageSpinner(objGetFiles);
 		addOnSelectClickListenerForSortSpinner(objGetFiles);
 		addListenerOnGridButton();
+		liFolderSys.get(0).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
+		liFolderSys.get(0).lazyloadImage();
+		liFolderSys.get(1).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
+		liFolderSys.get(1).lazyloadImage();
+		liFolderSys.get(2).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
+		liFolderSys.get(2).lazyloadImage();
 
 	}
 
