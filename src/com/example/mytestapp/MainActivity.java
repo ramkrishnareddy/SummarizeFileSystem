@@ -17,6 +17,7 @@ import android.support.v7.internal.widget.AdapterViewCompat.OnItemSelectedListen
 import android.support.v7.widget.LinearLayoutCompat.OrientationMode;
 import android.content.Context;
 import android.location.GpsStatus.Listener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.KeyEvent;
@@ -66,12 +67,17 @@ public class MainActivity extends ActionBarActivity {
 		addOnSelectClickListenerForStorageSpinner(objGetFiles);
 		addOnSelectClickListenerForSortSpinner(objGetFiles);
 		addListenerOnGridButton();
+		/*
 		liFolderSys.get(0).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
 		liFolderSys.get(0).lazyloadImage();
 		liFolderSys.get(1).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
 		liFolderSys.get(1).lazyloadImage();
 		liFolderSys.get(2).setMyFolderSysArrayAdapter(myFolderSysArrayAdapter);
-		liFolderSys.get(2).lazyloadImage();
+		liFolderSys.get(2).lazyloadImage();*/
+		BitmapWorkerTask task = new BitmapWorkerTask();
+
+		task.execute();
+		
 
 	}
 
@@ -385,5 +391,57 @@ public class MainActivity extends ActionBarActivity {
 			});
 		}
 	}
+	
+	public  class BitmapWorkerTask extends AsyncTask<Void,Void,Void> {
+		 @Override
+	     protected void onPreExecute() {
+	         //Log.i("ImageLoadTask", "Loading image...");
+	     }
+
+	     // PARAM[0] IS IMG URL
+	     protected Void doInBackground(Void... param) {
+	    	      for(int i=0;i<liFolderSys.size();i++)
+	    	      {
+	    	    	  if(liFolderSys.get(i).getFullPath().contains(".jpg"))
+	    	    	  {
+	    	    		 
+	    	    	  liFolderSys.get(i).setIconId(HandleBitmaps.decodeSampledBitmapFromFile(liFolderSys.get(i).getFullPath(), 50, 50));
+	    	    	   
+	    	    	  if(i==5)
+	    	    		  break;
+	    	    	  }
+					  
+	    	      }
+	    	      myFolderSysArrayAdapter.notifyDataSetChanged();
+	    	     
+	    	    	  
+				  return null;
+	     }
+
+	    // protected void onProgressUpdate(String... progress) {
+	         // NO OP
+	    // }
+
+	     
+	     protected void onPostExecute() {
+	        //if (ret != null) {
+	        //     Log.i("ImageLoadTask", "Successfully loaded " + text + " image");
+	       //      iconId = ret;
+	                 // WHEN IMAGE IS LOADED NOTIFY THE ADAPTER
+	            
+	    	
+	           
+	         //} 
+	             //else {
+	       //    Log.e("ImageLoadTask", "Failed to load " + text + " image");
+	        // }
+	       //  System.gc();
+	     }
+
+	}
+
+	
+	
+	
 
 }
