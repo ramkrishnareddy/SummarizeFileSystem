@@ -222,7 +222,10 @@ public class MainActivity extends ActionBarActivity {
 			}
 			path = path.substring(0, path.lastIndexOf("/"));
 			if (path.length() == 0)
-				path = Environment.getRootDirectory().getParent();
+			{
+				Spinner spinnerStorage=(Spinner) findViewById(R.id.storagetype_spinner);
+				path = GetAbsPath(spinnerStorage.getSelectedItem().toString());
+			}
 
 			File fileSysFiles = new File(path);
 			GetFiles objGetFiles = new GetFiles();
@@ -407,12 +410,12 @@ public class MainActivity extends ActionBarActivity {
 	    	    		 
 	    	    	  liFolderSys.get(i).setIconId(HandleBitmaps.decodeSampledBitmapFromFile(liFolderSys.get(i).getFullPath(), 50, 50));
 	    	    	   
-	    	    	  if(i==5)
-	    	    		  break;
+	    	    	//  if(i==5)
+	    	    		//  break;
 	    	    	  }
 					  
 	    	      }
-	    	      myFolderSysArrayAdapter.notifyDataSetChanged();
+	    	  //    myFolderSysArrayAdapter.notifyDataSetChanged();
 	    	     
 	    	    	  
 				  return null;
