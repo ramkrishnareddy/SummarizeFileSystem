@@ -126,16 +126,12 @@ public class MainActivity extends ActionBarActivity {
 
 	public MyFolderSysArrayAdapter BindAdapterToListview() {
 
+		myFolderSysArrayAdapter =new  MyFolderSysArrayAdapter();
 		ListView lvFileSystem = (ListView) findViewById(R.id.listview);
 		lvFileSystem.setAdapter(myFolderSysArrayAdapter);
 		return myFolderSysArrayAdapter;
 	}
 
-	public void ReloadAdapterWithChanges() {
-		
-	  myFolderSysArrayAdapter.notifyDataSetChanged();
-	  
-	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -344,7 +340,7 @@ public class MainActivity extends ActionBarActivity {
 						absPath = GetAbsPath(selectedStorageSpinnerText);
 						GetAllFilesDependSpinner(objGetFiles, absPath,
 								boolsdCard);
-						ReloadAdapterWithChanges();
+						BindAdapterToListview();
 						}
 
 					}
